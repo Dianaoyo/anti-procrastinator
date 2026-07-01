@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from aiogram import F, Router, types
 from aiogram.filters import Command
 from aiogram.fsm.state import StatesGroup, State
@@ -114,11 +113,6 @@ async def done_with_questions(message: types.Message, state: FSMContext):
     await message_in_user_lang(message, user_id, 'done with questions')
     await state.clear()
 
-#classes for reminders
-# class UserSettings(StatesGroup):
-#     food_time = State()
-#     sleep_time= State()
-
 # commands
 @user.message(Command('water'))
 async def water(message: types.Message):
@@ -129,36 +123,6 @@ async def water(message: types.Message):
     else:
         await add_user_stats(user_id, 'water_reminder', 'ON')
         await message_in_user_lang(message, user_id, 'water_on')
-
-# @user.message(Command('sleep'))
-# async def sleep(message: types.Message, state: FSMContext):
-#     user_id = message.from_user.id
-#     if await get_user_facts(user_id, 'sleep_reminder') == 'ON':
-#         await add_user_stats(user_id, 'sleep_reminder', 'OFF')
-#         await message_in_user_lang(message, user_id, 'sleep_off')
-#     else:
-#         await add_user_stats(user_id, 'sleep_reminder', 'ON')
-#         await message_in_user_lang(message, user_id, 'sleep_on')
-#         await state.set_state(UserSettings.sleep_time)
-#
-# # @user.message(UserSettings.sleep_time)
-# # async def sleep_time(message):
-# #     text = message.text
-# #     print(text)
-# #     sleep_t, wake_t = map(float, text.split(' '))
-# #     print(sleep_t)
-
-# @user.message(Command('food'))
-# async def food(message: types.Message, state: FSMContext):
-#     user_id = message.from_user.id
-#     if await get_user_facts(user_id, 'food_reminder') == 'ON':
-#         await add_user_stats(user_id, 'food_reminder', 'OFF')
-#         await message_in_user_lang(message, user_id, 'food_off')
-#     else:
-#         await add_user_stats(user_id, 'food_reminder', 'ON')
-#         await message_in_user_lang(message, user_id, 'food_on')
-#         await state.set_state(UserSettings.food_time)
-
 
 @user.message(Command('stretch'))
 async def stretch(message: types.Message, state: FSMContext):
@@ -270,4 +234,3 @@ async def total_focus(message: types.Message):
     else:
         await message_in_user_lang(message, user_id, 'no focus')
         await message.answer("You haven't focused today yet!")
->>>>>>> c7dd31ba49196073f193837bfba9ec795baae08d
