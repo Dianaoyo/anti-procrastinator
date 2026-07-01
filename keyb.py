@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
                            InlineKeyboardButton, InlineKeyboardMarkup)
 from lang import transl
