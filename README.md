@@ -1,2 +1,34 @@
 # anti-procrastinator
-telegram bot to boost productivity and deal with procrastination by reminders that can be set by a user. it can track completed tasks, motivate user, track time of focus and personalize experience by using ai 
+Telegram-бот для автоматизации продуктивности, который помогает бороться с прокрастинацией с помощью интеграции с LLM и системы трекинга задач.
+
+# Функционал
+- Трекинг задач и планирование времени.
+- Интеграция с LLM для поддержки и советов.
+- Напоминания и отчеты по продуктивности.
+- Хранение данных в базе (aiosqlite).
+
+# Технологический стек
+Язык: Python 3.10+
+Библиотеки:
+  - aiogram — асинхронный фреймворк для Telegram.
+  - aiosqlite — работа с базой данных.
+  - APScheduler — планировщик задач.
+  - gemini — интеграция с ИИ.
+
+# Установка и запуск
+
+1. Клонируйте репозиторий:
+   git clone [https://github.com/Dianaoyo/anti-procrastinator.git](https://github.com/Dianaoyo/anti-procrastinator.git)
+2. Создайте виртуальное окружение и установите зависимости:
+   pip install -r requirements.txt
+3. Создайте файл .env и добавьте туда ваш API_TOKEN для бота и токен для ИИ.
+4. Запустите бота:
+   python main.py
+   
+# Планы по развитию:
+Добавление визуальной аналитики (графики прогресса).
+Внедрение системы «очков продуктивности» за выполненные задачи.
+Расширение возможностей взаимодействия с ИИ
+
+Контакты
+Telegram: @Bebkebeb
