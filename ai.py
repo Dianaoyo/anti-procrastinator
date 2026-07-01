@@ -1,13 +1,16 @@
 import google.generativeai as genai
 from datab import get_all_user_facts, get_ai_style, add_ai_responses
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+ai_key = os.getenv("api_key")
+genai.configure(api_key = ai_key)
 model = genai.GenerativeModel('gemini-2.5-flash')
 
-async def respond_to_lazy(user_id):
+async def respond_to_motivation(user_id):
     user_facts = await get_all_user_facts(user_id)
-    print(user_facts)
     style = await get_ai_style(user_id)
-    # facts_text = ", ".join([f"{key}: {value}" for key, value in user_facts.items()])
     if style:
         prompt = f'''
             Ты - коуч по продуктивности, который общается в манере: {style}.
@@ -24,12 +27,6 @@ async def respond_to_lazy(user_id):
             - Без ожидания ответа.
             - Мотивация должна быть персонализированной (связанной с его целями).
             '''
-#         prompt = f'''
-# Ты - коуч по продуктивности, который общается {style}. Данные о пользователе: {user_facts}.
-# Пользователь не может приступить к задаче из-за лени.
-# Задача: Замотивировать пользователя, придерживаясь твоей манеры общения, ссылаясь на известные тебе данные о пользователе.
-# Формат: твое сообщение не должно подразумевать продолжения диалога, не должно быть приветствия в начале и вопросов в конце. Оно должно вызвать о пользователя мотивацию, чтобы он смог начать работу.
-# '''
     else:
         prompt = f'''
 Ты - коуч по продуктивности, который общается дружелюбно, понимающе. Данные о пользователе: {user_facts}
@@ -38,17 +35,31 @@ async def respond_to_lazy(user_id):
 Формат: твое сообщение не должно подразумевать продолжения диалога, не должно быть приветствия в начале и вопросов в конце. Оно должно вызвать о пользователя мотивацию, чтобы он смог начать работу.
 '''
     response = model.generate_content(prompt)
-    print(response.text)
-    await add_ai_responses(user_id, 'lazy', response.text)
+    await add_ai_responses(user_id, 'motivation', response.text)
     return response.text
 
 async def respond_to_tired(user_id):
     user_facts = get_all_user_facts(user_id)
     style = get_ai_style(user_id)
-    prompt = f'''
-Ты - коуч по продуктивности, который общается {style}. Данные пользователя: {user_facts}
-Пользователь устал и не может приступить к работе.
-Твоя задача: поддержать юзера, если это соответствует твоей манере общения, и дать ему полезные советы как он может качественно отдохнуть.
+    if style:
+        prompt = f'''
+    Ты - коуч по продуктивности, который общается в манере {style}. Данные о пользователе: {user_facts}
+    Пользователь устал и не может приступить к задаче. Твоя задача - дать ему совет, как он может качественно отдохнуть, не проваливаясь в прокрастинацию.
+    Требования к формату:
+    - Без приветствий.
+    - Без вопросов в конце.
+    - Без ожидания ответа.
+    - Мотивация должна быть персонализированной (связанной с его целями).
+'''
+    else:
+        prompt = f'''
+    Ты - коуч по продуктивности, который общается дружелюбно, понимающе. Данные о пользователе: {user_facts}
+    Пользователь устал и не может приступить к задаче. Твоя задача - дать ему совет, как он может качественно отдохнуть, не проваливаясь в прокрастинацию.
+    Требования к формату:
+    - Без приветствий.
+    - Без вопросов в конце.
+    - Без ожидания ответа.
+    - Мотивация должна быть персонализированной (связанной с его целями).
 '''
     response = model.generate_content(prompt)
     await add_ai_responses(user_id, 'tired', response.text)
