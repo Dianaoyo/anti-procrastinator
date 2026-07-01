@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import aiosqlite
 
 async def user_profiles_db():
