@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 transl = {
     'en': {
        transl = {
