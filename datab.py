@@ -204,7 +204,7 @@ async def get_all_user_facts(user_id):
                 return rows
             return None
 
- 
+
 
 async def get_user_time(user_id, date):
     async with aiosqlite.connect('user_profiles.db') as db:
