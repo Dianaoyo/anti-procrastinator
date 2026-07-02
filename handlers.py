@@ -9,10 +9,10 @@ import asyncio
 import time
 from datab import (add_user_facts, add_user_stats, get_user_facts, add_focus_time, get_user_time,
                    get_user_stats, add_time_start, get_time_start, get_all_user_facts,
-                   add_ai_style, get_ai_style, get_ai_responses)
+                   add_ai_style, get_ai_style, get_ai_responses, add_history, clear_history)
 import keyb as kb
 from lang import transl
-from ai import respond_to_motivation, respond_to_tired
+from ai import respond_to_motivation, respond_to_tired, respond_to_call
 from keyb import options
 
 user = Router()
@@ -24,12 +24,12 @@ class UserInfo(StatesGroup):
     waiting_for_motivation = State()
     waiting_for_previousSuccesses = State()
     waiting_for_dailyTime = State()
+    is_with_ai = State()
     procrastination_level = State()
     preferred_style = State()
     final = State()
 
 async def message_in_user_lang(message: types.Message,user_id, key:str, reply_markup=None):
-    # user_id = message.from_user.id
     lang = await get_user_facts(user_id, 'language')
     if lang is None:
         lang = 'en'
@@ -146,7 +146,6 @@ async def start_timer(message: types.Message, state: FSMContext):
 async def why(callback: CallbackQuery):
     user_id = callback.from_user.id
     option = await options(user_id)
-    # print(f"DEBUG: Тип option: {type(option)}")
     message = callback.message
     await message_in_user_lang(message, user_id, 'why', reply_markup=option)
     await callback.answer()
@@ -162,16 +161,6 @@ async def motivation(callback: CallbackQuery):
         await callback.message.answer(respond)
 
 @user.callback_query(F.data=='tired')
-async def motivation(callback: CallbackQuery):
-    user_id = callback.from_user.id
-    text = await get_ai_responses(user_id, 'tired')
-    if text:
-        await callback.message.answer(text)
-    else:
-        respond = await respond_to_tired(user_id)
-        await callback.message.answer(respond)
-
-@user.callback_query(F.data=='tired')
 async def tired(callback: CallbackQuery):
     user_id = callback.from_user.id
     text = await get_ai_responses(user_id, 'tired')
@@ -180,6 +169,33 @@ async def tired(callback: CallbackQuery):
     else:
         respond = await respond_to_tired(user_id)
         await callback.message.answer(respond)
+
+@user.callback_query(F.data=='call_ai')
+async def call_ai(callback: CallbackQuery, state: FSMContext):
+    message = callback.message
+    user_id = message.from_user.id
+    users_message = message.text
+    text = ''' (чтобы остановить чат и стереть историю нажми /clear)
+Я здесь. Расскажи, что тебя беспокоит? Может, есть задача, которая кажется слишком большой? Давай попробуем разбить её на кусочки вместе.'''
+    await add_history(user_id, 'USER', users_message)
+    await callback.message.answer(text)
+    await state.set_state(UserInfo.is_with_ai)
+    await callback.answer()
+
+@user.message(UserInfo.is_with_ai)
+async def chat_with_ai(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    users_message = message.text
+    await add_history(user_id, 'USER', users_message)
+    response = await respond_to_call(user_id)
+    await message.answer(response)
+@user.message(Command('clear'))
+async def clear(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    await clear_history(user_id)
+    await state.clear()
+    await message_in_user_lang(message, user_id, 'clear')
+
 
 @user.callback_query(F.data=='work')
 async def mb_timer(callback: CallbackQuery):
@@ -233,8 +249,6 @@ async def stop_timer(callback: CallbackQuery):
         tot_time = int(delta.total_seconds())
         today = datetime.now().strftime('%Y-%m-%d')
         user_id = callback.from_user.id
-        # text = text_in_lang(user_id, 'focused for...')
-        # await callback.message.answer(text)
         text_template = await text_in_lang(user_id, 'focus time')
         text = text_template.format(format_seconds(total_seconds))
         await callback.message.answer(text)

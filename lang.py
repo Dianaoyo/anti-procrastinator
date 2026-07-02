@@ -1,30 +1,42 @@
 # <<<<<<< HEAD
 transl = {
     'en': {
-        'welcome': """Welcome! I'm your assistant, I'm here to help you to increase your productivity! ;)
-    Here what I can do:
-    • Remind you to drink water (use /water)
-    • Remind you to sleep (use /sleep)
-    • Remind you to eat (use /eat)
-    • Remind you to stretch (use /stretch)
+        'welcome': """Hi! I'm yout assistant and i'll help you boost your productivity! ;)
+Here what i can do:
+ - remind you to drink water (/water)
+ - remind you to stretch (/stretch)
+ - track the time you've been focused (start timer)
     
-    For the best experience you may answer a few questions.
-    you can do it anytime by using /ready
-    """,
-    '1question': 'What are you trying to achieve?',
-    '2question': 'Great goal! But why do you need it?',
-    '3question': 'Have you done anything to achieve it ot you start with a scratch?',
-    '4question': 'how much time are you ready to spend for it?',
-    '5question': 'How often do you procrastinate? How exactly?',
-    '6question': 'What character of mine are you comfortable with?',
-    'done with questions': 'Great! Thanks for answers :3',
-    'water reminder': 'пора попитef',
-    'stretch reminder': 'пора бы размятьсяefвоночник!',
-    'dont procrastinate': 'подъем и прямef!',
-    'start timer': 'Таймер наef',
-    'total focus': 'сегодня ты был в фукапваусе ',
-    'why': 'Почеsedfwesdу?',
-    'start timer?': 'Отлично! Начать таймекаккакар?'
+ to turn on these functions, use the commands, to turn off use them again.
+ For the most effective work, answer some questions about yourself. 
+ You can start anytime using /ready
+""",
+        '1question': 'Whats your goal?',
+        '2question': 'Great goal! But what do you need it for?',
+        '3question': 'Were you doing anything to achieve it??',
+        '4question': 'How much time are you ready to spend for it?',
+        '5question': 'How often do you procrastinate (unnecessarily delay or postpone a task)? How exactly?',
+        '6question': 'How would you like me to chat in you?',
+        'done with questions': 'Great! Thanks for answers',
+        'dont procrastinate': "Wake up! Time's not waiting!",
+        'water_on': "From now on i'll remind you to drink water every 1.5 hours :)",
+        'water_off': "Got it! i won't remind you to drink water anymore",
+        'stretch_on': "From now on i'll remind you to stretch every 1.5 hours :)",
+        'stretch_off': "Got it! i won't remind you to stretch anymore",
+        'water reminder': 'Time for water!',
+        'stretch reminder': 'Time to stretch!',
+        'start timer': "the timer's on",
+        'total focus': "you've been focused for ",
+        'no focus': "you didn't work today yet",
+        'no ai style': 'default mod set',
+        'make a break': "You've been focused for 1.5 hours, make a break!",
+        'kick of motivation': 'Need motivation',
+        'tired': 'Tired',
+        'call ai': 'Call AI',
+        'why': 'Why?',
+        'start timer?': 'Great! do i start the timer?',
+        'focus time': "you've been focused for {}",
+        'clear': "chat with AI cleared"
     },
     'ru': {
         'welcome': """Привет! Я твой ассистент и я помогу тебе повысить продуктивность! ;)
@@ -73,7 +85,8 @@ transl = {
         'call ai': 'Позвать ИИ',
         'why': 'Почему?',
         'start timer?': 'Отлично! Начать таймер?',
-        'focus time': 'Ты был сконцентрирован {}'
+        'focus time': 'Ты был сконцентрирован {}',
+        'clear': "чат с ИИ был очищен"
 
     }
 }

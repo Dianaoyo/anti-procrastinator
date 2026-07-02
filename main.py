@@ -1,9 +1,9 @@
 # <<<<<<< HEAD
 import asyncio
 import logging
-# import os
-# from dotenv import load_dotenv
-# from aiogram import Dispatcher, Bot
+import os
+from dotenv import load_dotenv
+from aiogram import Bot, Dispatcher
 import keyb as kb
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import aiosqlite
@@ -12,21 +12,16 @@ from datab import user_profiles_db, get_user_facts, get_user_stats
 from lang import transl
 
 logging.basicConfig(level=logging.INFO)
-import os
-from dotenv import load_dotenv
-from aiogram import Bot, Dispatcher
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-# 1. Сначала загружаем переменные из .env
 load_dotenv()
 token = os.getenv("BOT_TOKEN")
-# 3. И только теперь создаем бота
 bot = Bot(token=token)
 dp = Dispatcher()
-# ... остальной код
 
 dp = Dispatcher()
 dp.include_router(user)
 debug_mode = 1
+
 async def text_in_lang(user_id, key:str):
     lang = await get_user_facts(user_id, 'language')
     text = transl[lang][key] or transl['ru'][key]
@@ -66,8 +61,6 @@ async def main():
                     await water_reminder(user_id)
                     await stretch_reminder(user_id)
     scheduler.start()
-    # if debug_mode:
-        # await reminder()
     await dp.start_polling(bot)
 
 if __name__ == '__main__':

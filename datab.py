@@ -12,6 +12,13 @@ async def user_profiles_db():
             )
         ''')
         await db.execute('''
+            CREATE TABLE IF NOT EXISTS history (
+                user_id TEXT,
+                who TEXT,
+                value TEXT
+            )
+        ''')
+        await db.execute('''
             CREATE TABLE IF NOT EXISTS ai_responses (
                 user_id TEXT,
                 key TEXT,
@@ -58,6 +65,16 @@ async def add_user_stats(user_id, key, value):
         await db.execute('DELETE FROM user_stats WHERE user_id = ? AND key = ?', (str(user_id),key))
         await db.execute('INSERT INTO user_stats (user_id, key, value) VALUES (?,?,?)', (str(user_id),key,value))
         await db.commit()
+async def get_user_stats(user_id, key):
+    async with aiosqlite.connect('user_profiles.db') as db:
+        async with db.execute(
+            'SELECT value FROM user_stats WHERE user_id = ? AND key = ?',
+            (str(user_id),key)
+        ) as cursor:
+            row = await cursor.fetchone()
+            if row:
+                return row[0]
+            return None
 
 async def add_alarms(user_id, key, value):
     async with aiosqlite.connect('user_profiles.db') as db:
@@ -157,6 +174,25 @@ async def get_ai_style(user_id):
                 return row[0]
             return None
 
+async def add_history(user_id,who, value):
+    async with aiosqlite.connect('user_profiles.db') as db:
+        await db.execute('DELETE FROM history WHERE user_id = ?', (str(user_id),) )
+        await db.execute('INSERT INTO history (user_id, who, value) VALUES (?,?,?)', (str(user_id),who,value))
+        await db.commit()
+async def get_history(user_id):
+    async with aiosqlite.connect('user_profiles.db') as db:
+        async with db.execute(
+            'SELECT who, value FROM history WHERE user_id = ?', (str(user_id),)
+       ) as cursor:
+            rows = await cursor.fetchall()
+            if rows:
+                return rows[:10]
+            else: return None
+async def clear_history(user_id):
+    async with aiosqlite.connect('user_profiles.db') as db:
+        await db.execute('DELETE FROM history WHERE user_id = ?', (str(user_id),))
+        await db.commit()
+        print("База данных успешно очищена!")
 
 async def get_all_user_facts(user_id):
     async with aiosqlite.connect('user_profiles.db') as db:
@@ -168,16 +204,7 @@ async def get_all_user_facts(user_id):
                 return rows
             return None
 
-async def get_user_stats(user_id, key):
-    async with aiosqlite.connect('user_profiles.db') as db:
-        async with db.execute(
-            'SELECT value FROM user_stats WHERE user_id = ? AND key = ?',
-            (str(user_id),key)
-        ) as cursor:
-            row = await cursor.fetchone()
-            if row:
-                return row[0]
-            return None
+
 
 async def get_user_time(user_id, date):
     async with aiosqlite.connect('user_profiles.db') as db:

@@ -1,5 +1,5 @@
 import google.generativeai as genai
-from datab import get_all_user_facts, get_ai_style, add_ai_responses
+from datab import get_all_user_facts, get_ai_style, add_ai_responses, get_history, add_history
 import os
 from dotenv import load_dotenv
 
@@ -63,4 +63,16 @@ async def respond_to_tired(user_id):
 '''
     response = model.generate_content(prompt)
     await add_ai_responses(user_id, 'tired', response.text)
+    return response.text
+
+async def respond_to_call(user_id):
+    user_facts = await get_all_user_facts(user_id)
+    style = await get_ai_style(user_id)
+    history = await get_history(user_id)
+    prompt = f'''
+Ты - коуч по продуктивности, который общается в манере {style}. Данные о пользователе: {user_facts}. Предыдущие сообщения: {history}.
+Пользователю нужен совет. Используй данные пользователя чтобы персонализировать опыт для него, но отдавай приоритет истории чата и текущему запросу пользователя.
+'''
+    response = model.generate_content(prompt)
+    await add_history(user_id, 'AI', response.text)
     return response.text

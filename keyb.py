@@ -32,12 +32,6 @@ ais_style = InlineKeyboardMarkup(
     resize_keyboard=True, one_time_keyboard=True
 )
 
-# make_a_break = InlineKeyboardMarkup(
-#     inline_keyboard=[
-#         [InlineKeyboardButton(text='ok', callback_data='doesnt_care')],
-#     ],
-#     resize_keyboard=True, one_time_keyboard=True
-# )
 
 async def options(user_id):
     text1 = await user_lang(user_id, 'kick of motivation')
