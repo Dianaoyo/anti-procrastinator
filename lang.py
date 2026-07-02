@@ -3,7 +3,7 @@ transl = {
     'en': {
         'welcome': """Hi! I'm yout assistant and i'll help you boost your productivity! ;)
 Here what i can do:
- - remind you to drink water (/water)
+ - remind you to drink water (/water) 
  - remind you to stretch (/stretch)
  - track the time you've been focused (start timer)
     

@@ -20,7 +20,7 @@ dp = Dispatcher()
 
 dp = Dispatcher()
 dp.include_router(user)
-debug_mode = 1
+debug_mode = 0
 
 async def text_in_lang(user_id, key:str):
     lang = await get_user_facts(user_id, 'language')
